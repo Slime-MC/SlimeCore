@@ -1,0 +1,4 @@
+name: SlimeCore
+version: '${project.version}'
+main: io.slimemc.slimecore.SlimeCore
+api-version: 1.17
