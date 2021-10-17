@@ -44,21 +44,18 @@ public class CommandManager implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
-        for (io.slimemc.slimecore.command.sCommand sCommand : commands) {
-            if (sCommand.getCommand() != null && sCommand.getCommand().equalsIgnoreCase(command.getName().toLowerCase())) {
-                if (strings.length == 0) {
-                    processRequirements(sCommand, sender, strings);
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+        for (sCommand scommand : commands) {
+            if (scommand.getCommand().equalsIgnoreCase(command.getName())) {
+                if (args.length == 0) {
+                    processRequirements(scommand, sender, args);
                     return true;
                 }
-            } else if (strings.length != 0 && getMainCommand() != null && getMainCommand().getCommand().equalsIgnoreCase(command.getName())) {
-                String cmd = strings[0];
-                String cmd2 = strings.length >= 2 ? String.join(" ", strings[0], strings[1]) : null;
-                for (String cmds : sCommand.getSubCommand()) {
-                    if (cmd.equalsIgnoreCase(cmds) || (cmd2 != null && cmd2.equalsIgnoreCase(cmds))) {
-                        processRequirements(sCommand, sender, strings);
-                        return true;
-                    }
+            } else if (args.length != 0 && getMainCommand() != null && getMainCommand().getCommand().equalsIgnoreCase(command.getName())) {
+                String cmd = args[0];
+                if (cmd.equalsIgnoreCase(scommand.getCommand())) {
+                    processRequirements(scommand, sender, args);
+                    return true;
                 }
             }
         }
@@ -79,6 +76,7 @@ public class CommandManager implements CommandExecutor {
     public CommandManager setMainCommand(sCommand command) {
         plugin.getCommand(command.getCommand()).setExecutor(this);
         this.mainCommand = command;
+        commands.add(command);
         return this;
     }
 
