@@ -9,7 +9,7 @@ public class Config {
     private final File file;
     private final YamlConfiguration config;
 
-    public Config(String configName, Plugin plugin) {
+    public Config(Plugin plugin, String configName) {
         file = new File(plugin.getDataFolder(), configName);
 
         if (!file.exists()) {
