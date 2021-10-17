@@ -16,7 +16,7 @@ public abstract class sCommand {
 
     protected sCommand(boolean mainCommand, boolean allowConsole, String... command){
         this.allowConsole = allowConsole;
-        if (mainCommand) {
+        if (!mainCommand) {
             this.subCommand = Arrays.asList(command);
         } else {
             this.command = Arrays.asList(command).get(0);
