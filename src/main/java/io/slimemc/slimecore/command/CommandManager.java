@@ -4,7 +4,6 @@ import io.slimemc.slimecore.utils.TextUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,11 +16,13 @@ public class CommandManager implements CommandExecutor {
     private JavaPlugin plugin;
     private sCommand mainCommand;
     private List<sCommand> commands = new ArrayList<>();
-    private String incorrectMessage = "&8[&a"+plugin.getName()+"&8] &7The command you entered does not exist or is spelt incorrectly.";
-    private String noPermissionMessage = "&8[&a"+plugin.getName()+"&8] &7You do not have permission to run this command.";
+    private String incorrectMessage;
+    private String noPermissionMessage;
 
     public CommandManager(JavaPlugin plugin) {
         this.plugin = plugin;
+        incorrectMessage = "&8[&a"+plugin.getName()+"&8] &7The command you entered does not exist or is spelt incorrectly.";
+        noPermissionMessage = "&8[&a"+plugin.getName()+"&8] &7You do not have permission to run this command.";
         
 
     }
@@ -32,7 +33,7 @@ public class CommandManager implements CommandExecutor {
             return;
         }
         if (command.getPermissionNode() == null || sender.hasPermission(command.getPermissionNode())) {
-            command.runCommand(plugin, sender, strings);
+            command.runCommand(sender, strings);
             return;
         }
         sender.sendMessage(TextUtils.formatText(noPermissionMessage));

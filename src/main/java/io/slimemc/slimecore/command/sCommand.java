@@ -39,9 +39,7 @@ public abstract class sCommand {
         return allowConsole;
     }
 
-    protected abstract void runCommand(JavaPlugin plugin, CommandSender sender, String... args);
-
-    protected abstract List<String> onTab(JavaPlugin plugin, CommandSender sender, String... args);
+    protected abstract void runCommand(CommandSender sender, String... args);
 
     public abstract String getPermissionNode();
 
