@@ -22,6 +22,10 @@ public enum ServerVersion {
         return serverVersion;
     }
 
+    public static String getServerVersionString() {
+        return serverPackageVersion;
+    }
+
     public static boolean equals(ServerVersion version) {
         return serverVersion == version;
     }
