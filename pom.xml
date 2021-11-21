@@ -6,7 +6,7 @@
 
     <groupId>io.slimemc</groupId>
     <artifactId>SlimeCore</artifactId>
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-beta</version>
     <packaging>jar</packaging>
 
     <name>SlimeCore</name>

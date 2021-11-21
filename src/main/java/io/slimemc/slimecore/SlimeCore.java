@@ -6,8 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class SlimeCore extends JavaPlugin {
 
-    private final String coreVersion = "1.0.0-alpha.3";
-    private final int coreVersionAsInt = 3;
+    private final String coreVersion = "1.0.0-beta.2";
+    private final int coreVersionAsInt = 6;
 
     private boolean error = false;
 
