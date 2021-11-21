@@ -6,6 +6,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class HologramUtils {
@@ -15,7 +16,7 @@ public class HologramUtils {
     private float gap = 0.25F;
 
     public HologramUtils(String... lines) {
-        this.lines = new ArrayList<>(List.of(lines));
+        this.lines = new ArrayList<>(Arrays.asList(lines));
     }
 
     public HologramUtils place(Location location) {
@@ -52,13 +53,13 @@ public class HologramUtils {
     }
 
     public HologramUtils setLines(String... lines) {
-        this.lines = List.of(lines);
+        this.lines = Arrays.asList(lines);
         replace();
         return this;
     }
 
     public HologramUtils addLines(String... lines) {
-        this.lines.addAll(List.of(lines));
+        this.lines.addAll(Arrays.asList(lines));
         replace();
         return this;
     }
