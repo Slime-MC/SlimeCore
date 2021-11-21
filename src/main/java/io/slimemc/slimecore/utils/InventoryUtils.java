@@ -6,11 +6,21 @@ import org.bukkit.inventory.ItemStack;
 
 public class InventoryUtils {
     public static int getActionValue(Action action) {
-        return switch (action) {
-            case LEFT_CLICK_BLOCK, LEFT_CLICK_AIR -> 0;
-            case RIGHT_CLICK_BLOCK, RIGHT_CLICK_AIR -> 1;
-            case PHYSICAL -> 2;
-        };
+        int actionValue = 0;
+        switch (action) {
+            case LEFT_CLICK_BLOCK:
+                actionValue = 0;
+            case LEFT_CLICK_AIR:
+                actionValue = 0;
+            case RIGHT_CLICK_BLOCK:
+                actionValue = 1;
+            case RIGHT_CLICK_AIR:
+                actionValue = 1;
+            case PHYSICAL:
+                actionValue = 2;
+        }
+        return actionValue;
+
     }
 
     public static int getInventoryCount(Inventory inventory) {
