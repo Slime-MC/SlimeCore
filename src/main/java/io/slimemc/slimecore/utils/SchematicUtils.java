@@ -48,11 +48,13 @@ public class SchematicUtils {
                 for (int z = minZ; z <= maxZ; z++) {
                     Block block = point1.getWorld().getBlockAt(x, y, z);
                     blocks[x - minX][y - minY][z - minZ] = block;
-                    if (block.getState() instanceof InventoryHolder holder) {
+                    if (block.getState() instanceof InventoryHolder) {
+                        InventoryHolder holder = (InventoryHolder) block;
                         if (InventoryUtils.getInventoryCount(holder.getInventory()) > 0) {
                             inventories.add(holder.getInventory());
                         }
-                    } else if (block.getState() instanceof CreatureSpawner spawner) {
+                    } else if (block.getState() instanceof CreatureSpawner) {
+                        CreatureSpawner spawner = (CreatureSpawner) block;
                         spawners.add(spawner);
                     }
                 }
@@ -258,7 +260,8 @@ public class SchematicUtils {
     private void setInventory(ItemStack[] contents, Location location) {
         if (contents != null) {
             Block block = location.getBlock();
-            if (block.getState() instanceof InventoryHolder holder) {
+            if (block.getState() instanceof InventoryHolder) {
+                InventoryHolder holder = (InventoryHolder) block;
                 holder.getInventory().setContents(contents);
             }
         }
