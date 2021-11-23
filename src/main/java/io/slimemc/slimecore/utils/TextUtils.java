@@ -3,6 +3,8 @@ package io.slimemc.slimecore.utils;
 import io.slimemc.slimecore.compatibility.ServerVersion;
 import org.bukkit.ChatColor;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -42,5 +44,22 @@ public class TextUtils {
 
     public static List<String> formatText(String... list) {
         return Arrays.stream(list).map(TextUtils::formatText).collect(Collectors.toList());
+    }
+
+    public static String formatEconomy(char currencySymbol, double number) {
+        return currencySymbol + formatNumber(number);
+    }
+
+    public static String formatNumber(double number) {
+        DecimalFormat decimalFormatter = new DecimalFormat(number == Math.ceil(number) ? "#,###" : "#,###.00");
+
+        // This is done to specifically prevent the NBSP character from printing in foreign languages.
+        DecimalFormatSymbols symbols = decimalFormatter.getDecimalFormatSymbols();
+        symbols.setGroupingSeparator(',');
+        symbols.setDecimalSeparator('.');
+
+        decimalFormatter.setDecimalFormatSymbols(symbols);
+
+        return decimalFormatter.format(number);
     }
 }
