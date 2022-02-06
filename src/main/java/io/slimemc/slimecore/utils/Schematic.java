@@ -1,5 +1,8 @@
 package io.slimemc.slimecore.utils;
 
+import io.slimemc.slimecore.utils.DelayedTask;
+import io.slimemc.slimecore.utils.InventoryUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,13 +26,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SchematicUtils {
+public class Schematic {
     private String name;
     private final File file;
+    private final Plugin plugin;
+    private Location spawnPoint;
     private FileConfiguration config = new YamlConfiguration();
-    private Plugin plugin;
 
-    public SchematicUtils(Plugin plugin, Block point1, Block point2, String name) {
+    public Schematic(Plugin plugin, Block point1, Block point2, String name) {
         this.name = name;
         this.plugin = plugin;
         file = new File(plugin.getDataFolder() + "/schematics/" + name + ".yml");
@@ -48,13 +52,11 @@ public class SchematicUtils {
                 for (int z = minZ; z <= maxZ; z++) {
                     Block block = point1.getWorld().getBlockAt(x, y, z);
                     blocks[x - minX][y - minY][z - minZ] = block;
-                    if (block.getState() instanceof InventoryHolder) {
-                        InventoryHolder holder = (InventoryHolder) block;
+                    if (block.getState() instanceof InventoryHolder holder) {
                         if (InventoryUtils.getInventoryCount(holder.getInventory()) > 0) {
                             inventories.add(holder.getInventory());
                         }
-                    } else if (block.getState() instanceof CreatureSpawner) {
-                        CreatureSpawner spawner = (CreatureSpawner) block;
+                    } else if (block.getState() instanceof CreatureSpawner spawner) {
                         spawners.add(spawner);
                     }
                 }
@@ -71,10 +73,12 @@ public class SchematicUtils {
             }
         }
         for (Entity entity : point1.getWorld().getNearbyEntities(BoundingBox.of(point1, point2))) {
+            Location loc = entity.getLocation().subtract(point);
             if (!(entity instanceof Player)) {
-                Location loc = entity.getLocation().subtract(point);
                 config.set("entities." + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ(),
                         entity.getType().toString().toUpperCase());
+            } else {
+                config.set("spawnpoint", loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
             }
         }
         for (Inventory inventory : inventories) {
@@ -93,14 +97,12 @@ public class SchematicUtils {
         }
     }
 
-    private SchematicUtils(Plugin plugin, String name) {
+    public Schematic(Plugin plugin, String name) {
         this.name = name;
+        this.plugin = plugin;
         file = new File(plugin.getDataFolder() + "/schematics/" + name + ".yml");
         this.config = YamlConfiguration.loadConfiguration(file);
-    }
 
-    public static SchematicUtils get(Plugin plugin, String name) {
-        return new SchematicUtils(plugin, name);
     }
 
     public String getName() {
@@ -115,7 +117,7 @@ public class SchematicUtils {
         return config;
     }
 
-    public void save(String name) {
+    public void save(Plugin plugin, String name) {
         try {
             config.save(new File(plugin.getDataFolder() + "/schematics/" + name + ".yml"));
         } catch (IOException e) {
@@ -225,6 +227,12 @@ public class SchematicUtils {
                     setInventory(contents.toArray(new ItemStack[0]), newLoc);
                 }
             }
+
+            String string = config.getString("spawnpoint");
+            String[] locSplit = string.split(",");
+            this.spawnPoint = location.clone().add(new Vector(Integer.parseInt(locSplit[0]),
+                    Integer.parseInt(locSplit[1]), Integer.parseInt(locSplit[2])));
+
         }).run((long) finishCount * interval);
     }
 
@@ -260,8 +268,7 @@ public class SchematicUtils {
     private void setInventory(ItemStack[] contents, Location location) {
         if (contents != null) {
             Block block = location.getBlock();
-            if (block.getState() instanceof InventoryHolder) {
-                InventoryHolder holder = (InventoryHolder) block;
+            if (block.getState() instanceof InventoryHolder holder) {
                 holder.getInventory().setContents(contents);
             }
         }
@@ -273,5 +280,9 @@ public class SchematicUtils {
         CreatureSpawner spawner = (CreatureSpawner) block.getState();
         spawner.setSpawnedType(type);
         spawner.update();
+    }
+
+    public Location getSpawnPoint() {
+        return this.spawnPoint;
     }
 }
