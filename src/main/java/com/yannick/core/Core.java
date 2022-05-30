@@ -6,8 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class Core extends JavaPlugin {
 
-    private final String coreVersion = "1.0.2";
-    private final int coreVersionAsInt = 10;
+    private final String coreVersion = "1.0.3";
+    private final int coreVersionAsInt = 11;
 
     private boolean error = false;
 
